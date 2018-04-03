@@ -1,4 +1,0 @@
-{
-  "sd_tests.py::MyTestCase::test_gradient_single": true,
-  "sd_tests.py::TestGradientDescent::test_gradient_double": true
-}
