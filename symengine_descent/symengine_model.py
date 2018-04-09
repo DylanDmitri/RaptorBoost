@@ -1,7 +1,9 @@
 import numpy as np
 import symengine as sym
 from symengine import Symbol
-from sympy_descent.data_loader import DataLoader
+from sympy_descent.data_loader import DataLoaderDict
+
+DataLoader = DataLoaderDict
 
 THETA_PREFIX = 't'
 def Theta(i:int):
@@ -82,7 +84,7 @@ class Model:
         @np.vectorize
         def cost_partial(t):
             f = self.model * self.model.diff(t)
-            return np.sum(f.subs(row) for row in self.data) #.simplify()
+            return np.sum(f.subs(row) for row in self.data).simplify()
 
         self.grad = cost_partial(self.thetas)
 
@@ -123,7 +125,7 @@ class Model:
     # =========================================================================
     @property
     def theta_dict(self):
-        return tuple(zip(self.thetas, self.theta_vals))
+        return dict(zip(self.thetas, self.theta_vals))
 
     def save_weighted_model(self):
         self.weighted_model = self.model.subs(self.theta_dict).simplify()

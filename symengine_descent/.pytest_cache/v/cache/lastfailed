@@ -1,0 +1,5 @@
+{
+  "testEngine.py::TestGradientDescent::test_double_thetas": true,
+  "testEngine.py::TestGradientDescent::test_double_xs": true,
+  "testEngine.py::TestGradientDescent::test_simplest": true
+}

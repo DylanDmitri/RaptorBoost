@@ -13,3 +13,10 @@ class DataLoader:
     def __iter__(self):
         for row in self.df.iterrows():
             yield tuple(row[1].to_dict().items())
+
+
+class DataLoaderDict(DataLoader):
+
+    def __iter__(self):
+        for row in self.df.iterrows():
+            yield row[1].to_dict()

@@ -1,6 +1,14 @@
 from sympy_descent.helpers import *
 from sympy_descent.data_loader import DataLoader
 
+
+class NoThetaException(Exception):
+    """No thetas found. Should start with `t`."""
+
+class DivergentModelException(Exception):
+    """Whoops"""
+
+
 class Model:
 
     # =========================================================================
@@ -37,7 +45,7 @@ class Model:
         search(self.model)
 
         if len(thetas) == 0:
-            raise Exception(f'No Thetas found. Should start with {THETA_PREFIX}')
+            raise NoThetaException
 
         self.thetas = sorted(tuple(thetas), key=str)
 
@@ -66,7 +74,10 @@ class Model:
 
     # =========================================================================
     def descend(self, initial_thetas,
-                alpha=.05, momentum=0.5, threshold=.01):
+                alpha=.01, momentum=0.5, threshold=.01):
+
+        if initial_thetas == 'rand':
+            initial_thetas = list(np.random.rand(len(self.thetas)))
 
         assert len(initial_thetas) == len(self.thetas)
 
@@ -74,21 +85,23 @@ class Model:
 
         deltas = np.zeros(len(self.thetas))
 
-        for i in range(999):
+        for i in range(1,500):
 
-            self.save_weighted_model()
-
-            # print(i, '\t', *(f'{float(s):.4f}'.ljust(8) for s in (*self.theta_vals, self.error())))
+            # if not i%50:
+            #     self.save_weighted_model()
+            #     print(i, '\t', *(f'{float(s):.4f}'.ljust(8) for s in (*self.theta_vals, self.error())))
 
             deltas = (momentum*deltas
                       + np.array([grad.subs(self.theta_dict) for grad in self.grad]))
 
-            if sum(abs(deltas)) < threshold: break
+            if sum(abs(deltas)) < threshold:
+                break
 
             self.theta_vals -= deltas * alpha
 
-        else:
-            raise Exception('maximum iterations exceeded. something is probably wrong')
+            if any(abs(self.theta_vals) > 9999):
+                raise DivergentModelException()
+
 
         self.save_weighted_model()
 
@@ -99,7 +112,6 @@ class Model:
 
     def save_weighted_model(self):
         self.weighted_model = simplify(self.model.subs(self.theta_dict))
-
 
     def error(self):
         return np.sum(self.weighted_model.subs(row)**2 for row in self.data)

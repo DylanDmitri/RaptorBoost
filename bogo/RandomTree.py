@@ -42,19 +42,15 @@ class Sum(Operation):
 class Product(Operation):
     func = sp.Mul
 
-class Min(Operation):
-    func = sp.Min
+# class Min(Operation):
+#     func = sp.Min
 
-class Max(Operation):
-    func = sp.Max
+# class Max(Operation):
+#     func = sp.Max
 
-class Power(Operation):
-    func = sp.Pow
-    slot_limit = 2
-
-class Log(Operation):
-    func = sp.log
-    slot_limit = 2
+# class Power(Operation):
+#     func = sp.Pow
+#     slot_limit = 2
 
 
 class RandomTree:
@@ -70,8 +66,6 @@ class RandomTree:
         self.current_theta = 0
         self.features = features
         self.fill(self.head)
-
-        print('done')
 
     def random_child(self, node):
         r = randint(0, len(node.args) + node.empty)
@@ -91,8 +85,8 @@ class RandomTree:
         while len(node.args) < 2:
             node.add(self.random_symbol())
 
-        while node.empty and random()<.5:
-            node.add(self.random_symbol())
+        while node.empty and random()<.4:
+            node.add(sp.Symbol(choice(self.features)))
 
         for child in node.args:
             if isinstance(child, Operation):
@@ -100,5 +94,7 @@ class RandomTree:
 
     def to_sympy(self):
         return sp.simplify(self.head.serialize())
+
+
 
 

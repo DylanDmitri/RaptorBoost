@@ -1,10 +1,12 @@
 import unittest
-from bogo.BogoBoost import RandomTree
+from bogo.RandomTree import RandomTree, bag
 
 class MyTestCase(unittest.TestCase):
+
     def test_something(self):
-        t = RandomTree(3)
-        print(t.head.serialize)
+        t = RandomTree(1)
+        print(t.head.serialize())
+
 
 if __name__ == '__main__':
     unittest.main()

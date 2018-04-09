@@ -1,6 +1,6 @@
 import unittest
 from sympy_descent.model import Model
-from sympy_descent.data_loader import DataLoader
+
 import sympy
 import pandas as pd
 
@@ -11,10 +11,14 @@ t1 = sympy.Symbol('t1')
 t2 = sympy.Symbol('t2')
 t3 = sympy.Symbol('t3')
 
+
+tnum = 0
 def disp(m):
+    global tnum
+    tnum += 1
     print()
-    print('test1')
-    print(m.weighted_model)
+    print(f'test{tnum}')
+    print(m.weighted_model + y)
     print('error:', m.error())
 
 
@@ -27,19 +31,19 @@ class TestGradientDescent(unittest.TestCase):
             pd.DataFrame({'x1':(1,2,3), 'y':(1.0,1.9,3.1)}),
             target = 'y')
 
-        solver.descend([0])
+        solver.descend('rand')
 
         disp(solver)
 
     def test_double_thetas(self):
 
         solver = Model(
-            t1*x1*x1 + t2,
+            t1*x1**2 + t2,
             pd.DataFrame({'x1':(0,1,2), 'y':(1,2,5)}),
             target = 'y'
         )
 
-        solver.descend([0.0, 0.0], alpha=.05, momentum=.5, threshold=.01)
+        solver.descend([0.0, 0.0], alpha=.05, momentum=.5, threshold=.001)
         disp(solver)
 
     def test_double_xs(self):
